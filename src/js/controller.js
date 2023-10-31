@@ -119,10 +119,13 @@ const controlAddRecipe = async function (newRecipe) {
     setTimeout(function () {
       addRecipeView.toggleWindow();
     }, MODAL_CLOSE_SEC * 1000);
-
   } catch (err) {
     addRecipeView.renderErrorMessage(err.message);
   }
+};
+
+const newFeature = function () {
+  console.log('hello');
 };
 
 const init = function () {
@@ -133,6 +136,6 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
   addRecipeView.addHandlerUpload(controlAddRecipe);
-console.log('welcome Home!');
+  newFeature();
 };
 init();
