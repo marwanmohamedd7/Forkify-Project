@@ -1,4 +1,5 @@
 import icons from 'url:../../img/icons.svg';
+import { Fraction } from 'fractional';
 import View from './View';
 
 class RecipeView extends View {
@@ -19,12 +20,12 @@ class RecipeView extends View {
     });
   }
 
-  addHandlerAddBookmarks(handler){
-    this._parentEl.addEventListener('click', function(e){
+  addHandlerAddBookmarks(handler) {
+    this._parentEl.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn--bookmark');
-      if(!btn) return;
+      if (!btn) return;
       handler();
-    })
+    });
   }
 
   _generateMarkup() {
@@ -75,14 +76,18 @@ class RecipeView extends View {
                 </div>
               </div>
     
-              <div class="recipe__user-generated ${this._data.key?'':'hidden'}">
+              <div class="recipe__user-generated ${
+                this._data.key ? '' : 'hidden'
+              }">
                 <svg>
                   <use href="${icons}#icon-user"></use>
                 </svg>
               </div>
               <button class="btn--round btn--bookmark">
                 <svg class="">
-                  <use href="${icons}#icon-bookmark${this._data.bookmark?'-fill':''}"></use>
+                  <use href="${icons}#icon-bookmark${
+      this._data.bookmark ? '-fill' : ''
+    }"></use>
                 </svg>
               </button>
             </div>
@@ -125,7 +130,7 @@ class RecipeView extends View {
                 <use href="${icons}#icon-check"></use>
             </svg>
         <div class="recipe__quantity">${
-          ing.quantity
+          ing.quantity ? new Fraction(ing.quantity).toString() : ``
         }</div>
         <div class="recipe__description">
             <span class="recipe__unit">${ing.unit}</span>
