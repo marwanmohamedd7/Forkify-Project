@@ -5,7 +5,7 @@ import View from './View';
 class RecipeView extends View {
   _parentEl = document.querySelector('.recipe');
   _messageError = `No recipes found! Please try again!`;
-  _messageSucces = ``;
+  _messageSucces = `Recipe successfully deleted`;
 
   addHandlerRender(handler) {
     ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
@@ -20,12 +20,20 @@ class RecipeView extends View {
     });
   }
 
-  addHandlerAddBookmarks(handler){
-    this._parentEl.addEventListener('click', function(e){
+  addHandlerAddBookmarks(handler) {
+    this._parentEl.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn--bookmark');
-      if(!btn) return;
+      if (!btn) return;
       handler();
-    })
+    });
+  }
+
+  addHandlerDeleteRecipe(handler) {
+    this._parentEl.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--delete');
+      if (!btn) return;
+      handler();
+    });
   }
 
   _generateMarkup() {
@@ -40,6 +48,7 @@ class RecipeView extends View {
             </figure>
     
             <div class="recipe__details">
+
               <div class="recipe__info">
                 <svg class="recipe__info-icon">
                   <use href="${icons}#icon-clock"></use>
@@ -49,6 +58,7 @@ class RecipeView extends View {
                 }</span>
                 <span class="recipe__info-text">minutes</span>
               </div>
+
               <div class="recipe__info">
                 <svg class="recipe__info-icon">
                   <use href="${icons}#icon-users"></use>
@@ -75,17 +85,33 @@ class RecipeView extends View {
                   </button>
                 </div>
               </div>
-    
-              <div class="recipe__user-generated ${this._data.key?'':'hidden'}">
+
+              <div class="recipe__user-generated ${
+                this._data.key ? '' : 'hidden'
+              }">
                 <svg>
                   <use href="${icons}#icon-user"></use>
                 </svg>
               </div>
+
+               <button style="background:#eeeae8; ${
+                 this._data.key ? 'margin-right:6px' : ''
+               };" class="btn--round btn--delete ${
+      this._data.key ? '' : 'hidden'
+    }">
+                 <svg style="fill:#f38e82" class="">
+                   <use href="${icons}#icon-pin"></use>
+                 </svg>
+               </button>
+              
               <button class="btn--round btn--bookmark">
                 <svg class="">
-                  <use href="${icons}#icon-bookmark${this._data.bookmark?'-fill':''}"></use>
+                  <use href="${icons}#icon-bookmark${
+      this._data.bookmark ? '-fill' : ''
+    }"></use>
                 </svg>
               </button>
+              
             </div>
     
             <div class="recipe__ingredients">

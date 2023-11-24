@@ -28,6 +28,23 @@ export const AJAX = async function (url, uploadData = undefined) {
   }
 };
 
+export const deleteJSON = async function (url, recipe) {
+  try {
+    const fetchPro = fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(recipe),
+    });
+    const res = await Promise.race([fetchPro, timeout(TIMEOUT_SEC)]);
+    if (!res.ok)
+      throw new Error(`Delete process has been failed ${res.status}`);
+    return res.ok;
+  } catch (err) {
+    throw err;
+  }
+};
 /*
 export const getJSON = async function (url) {
   try {

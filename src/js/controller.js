@@ -1,7 +1,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { async } from 'regenerator-runtime';
-import { MODAL_CLOSE_SEC } from './config';
+import { KEY, MODAL_CLOSE_SEC } from './config';
 import * as model from './model';
 import recipeView from '../js/view/recipeView';
 import searchView from './view/searchView';
@@ -51,7 +51,6 @@ const controlSearchResults = async function () {
 
     // 2: Loading Search Results
     await model.loadSearchResults(query);
-
     // 3: Render results
     // resultsView.render(model.state.search.results);
     resultsView.render(model.getSearchResultsPage());
@@ -124,10 +123,38 @@ const controlAddRecipe = async function (newRecipe) {
   }
 };
 
+const controlDeleteRecipe = async function () {
+  try {
+    const id = model.state.recipe.id;
+    const idx = model.state.search.results.findIndex(el => el.id === id);
+    const bookIdx = model.state.Bookmarks.findIndex(el => el.id === id);
+    // Delete recipe
+    await model.deleteRecipe(id);
+    // Remove id in url
+    const ref = window.location.href.slice(
+      0,
+      window.location.href.indexOf('#')
+    );
+    window.history.replaceState(null, '', `${ref}`);
+    if (idx >= 0) {
+      model.state.search.results.splice(idx, 1);
+      model.state.Bookmarks.splice(bookIdx, 1);
+      localStorage.setItem('bookmarks', JSON.stringify(model.state.Bookmarks));
+      resultsView.render(model.getSearchResultsPage());
+      bookmarksView.render(model.state.Bookmarks);
+      recipeView.renderSuccesMessage();
+    }
+  } catch (err) {
+    recipeView.renderErrorMessage(err);
+  }
+};
+
 const init = function () {
+  // Add event listeners
   bookmarksView.addHandlerRenderStoredBookmarks(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);
+  recipeView.addHandlerDeleteRecipe(controlDeleteRecipe);
   recipeView.addHandlerAddBookmarks(controlAddBookmarks);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
